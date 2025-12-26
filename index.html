@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GrantStudios - AI Solutions for Tradesmen</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        slate: {
+                            850: '#151f32',
+                            900: '#0f172a',
+                            950: '#020617',
+                        },
+                        brand: {
+                            orange: '#F97316',
+                            blue: '#3B82F6',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'blob': 'blob 7s infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        html {
+            scroll-padding-top: 80px;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        /* Waveform Animation */
+        @keyframes wave {
+            0%, 100% { height: 15%; opacity: 0.4; }
+            50% { height: 100%; opacity: 1; }
+        }
+        .animate-wave {
+            animation: wave 1s ease-in-out infinite;
+        }
+        /* Modal Utilities */
+        .modal-open {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="antialiased text-slate-200 overflow-x-hidden">
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 ease-in-out py-2 bg-transparent">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex-shrink-0">
+                    <a href="#" class="text-2xl font-bold text-white tracking-wider flex items-center gap-2" onclick="window.scrollTo({ top: 0, behavior: 'smooth' }); return false;">
+                        <span class="text-brand-orange"><i class="fa-solid fa-microchip"></i></span>
+                        GrantStudios
+                    </a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#features" class="text-gray-300 hover:text-brand-orange transition-colors px-3 py-2 rounded-md text-sm font-medium">How It Works</a>
+                        <a href="#demo" class="text-gray-300 hover:text-brand-orange transition-colors px-3 py-2 rounded-md text-sm font-medium">The Demo</a>
+                        <a href="#pricing" class="text-gray-300 hover:text-brand-orange transition-colors px-3 py-2 rounded-md text-sm font-medium">Pricing</a>
+                        <a href="#faq" class="text-gray-300 hover:text-brand-orange transition-colors px-3 py-2 rounded-md text-sm font-medium">FAQ</a>
+                        <a href="#" class="bg-brand-blue hover:bg-blue-600 text-white px-5 py-2.5 rounded-full text-sm font-semibold transition-all shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transform hover:-translate-y-0.5">
+                            Book A Strategy Call
+                        </a>
+                    </div>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="-mr-2 flex md:hidden">
+                    <button id="mobile-menu-btn" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none">
+                        <i class="fas fa-bars text-xl" id="menu-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-900/95 backdrop-blur-xl border-b border-gray-800">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#features" class="text-gray-300 hover:text-brand-orange block px-3 py-2 rounded-md text-base font-medium">How It Works</a>
+                <a href="#demo" class="text-gray-300 hover:text-brand-orange block px-3 py-2 rounded-md text-base font-medium">The Demo</a>
+                <a href="#pricing" class="text-gray-300 hover:text-brand-orange block px-3 py-2 rounded-md text-base font-medium">Pricing</a>
+                <a href="#faq" class="text-gray-300 hover:text-brand-orange block px-3 py-2 rounded-md text-base font-medium">FAQ</a>
+                <a href="#" class="text-white bg-brand-blue block px-3 py-2 rounded-md text-base font-medium mt-4 text-center">Book A Strategy Call</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        <!-- Background Effects -->
+        <div class="absolute inset-0 w-full h-full bg-slate-900">
+            <div class="absolute top-0 -left-4 w-72 h-72 bg-brand-blue rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+            <div class="absolute top-0 -right-4 w-72 h-72 bg-brand-orange rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" style="animation-delay: 2s"></div>
+            <div class="absolute -bottom-8 left-20 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" style="animation-delay: 4s"></div>
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
+        </div>
+
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+            <div data-aos="fade-up" class="inline-block mb-4 px-4 py-1.5 rounded-full border border-brand-orange/30 bg-brand-orange/10 text-brand-orange text-sm font-semibold tracking-wide uppercase">
+                Trusted by top independent contractors
+            </div>
+            <h1 data-aos="fade-up" data-aos-delay="100" class="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-tight mb-6">
+                Stop Losing Emergency <br />
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-red-500">
+                    Jobs to Voicemail.
+                </span>
+            </h1>
+            <p data-aos="fade-up" data-aos-delay="200" class="mt-4 max-w-2xl mx-auto text-xl text-slate-400">
+                The 24/7 AI Dispatcher for HVAC & Plumbers. It answers calls, vets emergencies, and books appointments while you’re on the job site.
+            </p>
+            <div data-aos="fade-up" data-aos-delay="300" class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#demo" class="px-8 py-4 bg-gradient-to-r from-brand-orange to-red-600 rounded-lg text-white font-bold text-lg shadow-lg shadow-orange-500/30 hover:shadow-orange-500/60 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 group relative overflow-hidden">
+                    <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                    <span class="relative flex h-3 w-3 mr-1">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+                    </span>
+                    <span class="relative">Hear The AI In Action</span>
+                </a>
+                <a href="#pricing" class="px-8 py-4 border border-slate-600 rounded-lg text-white font-semibold text-lg hover:bg-slate-800 hover:border-slate-500 hover:text-brand-orange transition-all flex items-center justify-center">
+                    View Pricing
+                </a>
+            </div>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-slate-500">
+            <i class="fas fa-chevron-down text-2xl"></i>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="py-24 bg-slate-950 relative border-t border-slate-800">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <div data-aos="fade-up" class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-phone-slash text-3xl text-red-500"></i>
+            </div>
+            <h2 data-aos="fade-up" class="text-3xl md:text-5xl font-bold text-white mb-6">
+                Your Voicemail is Costing You $5,000+ Per Month.
+            </h2>
+            <p data-aos="fade-up" data-aos-delay="100" class="text-xl text-slate-400 leading-relaxed mb-8">
+                You’re under a house or on a roof. The phone rings. You can't pick up. That customer doesn't leave a voicemail—they just call your competitor.
+            </p>
+            
+            <div data-aos="zoom-in" class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+                <div class="p-6 bg-slate-900 rounded-xl border border-slate-800">
+                    <div class="text-3xl font-bold text-red-500 mb-2">85%</div>
+                    <div class="text-slate-400 text-sm">of customers hang up on voicemail</div>
+                </div>
+                 <div class="p-6 bg-slate-900 rounded-xl border border-slate-800">
+                    <div class="text-3xl font-bold text-red-500 mb-2">$5k+</div>
+                    <div class="text-slate-400 text-sm">Lost monthly revenue</div>
+                </div>
+                 <div class="p-6 bg-slate-900 rounded-xl border border-slate-800">
+                    <div class="text-3xl font-bold text-red-500 mb-2">0</div>
+                    <div class="text-slate-400 text-sm">Jobs missed with AI</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section (Audio Player) -->
+    <section id="demo" class="py-24 bg-slate-900 relative overflow-hidden">
+        <!-- Background grid pattern -->
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div data-aos="fade-right">
+                    <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">
+                        Listen to "Alex" Handle an Emergency Call.
+                    </h2>
+                    <p class="text-xl text-slate-400 mb-8">
+                        The customer says "Furnace Broken." Listen to how Alex secures the $300 diagnostic fee before you even wake up.
+                    </p>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center text-slate-300">
+                            <i class="fas fa-check-circle text-brand-blue mr-3"></i>
+                            Immediate Response
+                        </li>
+                        <li class="flex items-center text-slate-300">
+                            <i class="fas fa-check-circle text-brand-blue mr-3"></i>
+                            Polite & Professional
+                        </li>
+                        <li class="flex items-center text-slate-300">
+                            <i class="fas fa-check-circle text-brand-blue mr-3"></i>
+                            Books The Appointment
+                        </li>
+                    </ul>
+                </div>
+                <div data-aos="fade-left">
+                    <!-- Audio Player Logic is in script.js -->
+                    <div id="audio-player-container" class="w-full max-w-lg mx-auto bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl p-6 relative overflow-hidden group transition-all duration-500">
+                        <!-- Glow effect -->
+                        <div id="player-glow" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] blur-[100px] rounded-full transition-all duration-1000 bg-brand-blue/10 opacity-50 group-hover:bg-brand-orange/10"></div>
+
+                        <div class="relative z-10">
+                            <div class="flex items-center justify-between mb-8">
+                                <div>
+                                    <h3 class="text-white font-bold text-lg">Incoming Call: 2:00 AM</h3>
+                                    <p class="text-slate-400 text-xs uppercase tracking-wider mt-1 flex items-center gap-2">
+                                       <i class="fas fa-phone-alt text-[10px]"></i> "Furnace Broken"
+                                    </p>
+                                </div>
+                                <div id="live-indicator" class="flex space-x-2 items-center px-3 py-1 rounded-full bg-slate-700/50">
+                                    <span class="indicator-dot block w-2 h-2 rounded-full bg-slate-500"></span>
+                                    <span class="indicator-text text-slate-500 text-xs font-bold uppercase">Ready</span>
+                                </div>
+                            </div>
+
+                            <!-- Visual Waveform (Bars generated by JS or static HTML) -->
+                            <div id="waveform" class="flex items-end justify-center space-x-[2px] h-16 mb-8 px-2 overflow-hidden">
+                                <!-- Bars will be injected here via JS -->
+                            </div>
+
+                            <div class="flex items-center gap-6">
+                                <button id="play-btn" class="w-16 h-16 flex-shrink-0 flex items-center justify-center rounded-full bg-gradient-to-br from-brand-orange to-red-600 text-white transition-all duration-300 relative z-20 shadow-xl hover:scale-110 hover:shadow-orange-500/30">
+                                    <span id="play-ring" class="absolute inset-0 rounded-full border-2 border-white/30 animate-ping opacity-75"></span>
+                                    <i id="play-icon" class="fas fa-play text-2xl ml-1"></i>
+                                </button>
+                                
+                                <div class="flex-1">
+                                    <div class="w-full bg-slate-700/50 h-1.5 rounded-full overflow-hidden cursor-pointer">
+                                        <div id="progress-bar" class="bg-gradient-to-r from-brand-orange to-red-500 h-full rounded-full transition-all duration-500 ease-linear relative" style="width: 0%">
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-between mt-2 text-xs text-slate-400 font-mono">
+                                        <span id="current-time">00:00</span>
+                                        <span>00:45</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 relative bg-fixed bg-cover bg-center" style="background-image: linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.95)), url('https://images.unsplash.com/photo-1581094794329-cd279ce84a97?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 data-aos="fade-up" class="text-brand-blue font-bold tracking-wide uppercase text-sm mb-2">The Solution</h2>
+                <h3 data-aos="fade-up" class="text-3xl md:text-5xl font-bold text-white">Built for the Trades.</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div data-aos="fade-up" data-aos-delay="0" class="glass-card p-8 rounded-2xl hover:border-brand-orange/50 transition-colors group">
+                    <div class="w-14 h-14 bg-slate-800 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-shield-alt text-2xl text-brand-orange"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-4">24/7 Emergency Screening</h4>
+                    <p class="text-slate-400">The AI detects keywords like 'Leak,' 'No Heat,' or 'Burst Pipe' and flags them as priority.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div data-aos="fade-up" data-aos-delay="100" class="glass-card p-8 rounded-2xl hover:border-brand-blue/50 transition-colors group">
+                    <div class="w-14 h-14 bg-slate-800 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i class="far fa-calendar-check text-2xl text-brand-blue"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-4">Instant Booking</h4>
+                    <p class="text-slate-400">Connects directly to your calendar to book diagnostic slots without double booking you.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div data-aos="fade-up" data-aos-delay="200" class="glass-card p-8 rounded-2xl hover:border-green-500/50 transition-colors group">
+                    <div class="w-14 h-14 bg-slate-800 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-mobile-alt text-2xl text-green-500"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-4">Text Message Follow-up</h4>
+                    <p class="text-slate-400">Instantly texts the customer a confirmation and prepares them for your arrival.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-24 bg-slate-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-lg mx-auto">
+                <div data-aos="flip-up" class="relative p-1 rounded-2xl bg-gradient-to-b from-brand-orange to-brand-blue">
+                    <div class="bg-slate-900 rounded-xl p-8 md:p-12 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-brand-orange text-white text-xs font-bold px-3 py-1 rounded-bl-lg uppercase tracking-wider">
+                            Most Popular
+                        </div>
+                        
+                        <h3 class="text-2xl font-bold text-white mb-2">The Pro Dispatcher</h3>
+                        <div class="flex items-baseline mb-6">
+                            <span class="text-5xl font-extrabold text-white">$297</span>
+                            <span class="text-xl text-slate-400 ml-2">/month</span>
+                        </div>
+
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-center text-white">
+                                <i class="fas fa-check text-green-500 mr-3"></i>
+                                <span class="font-bold text-brand-orange">Zero Setup Fee (Limited Time)</span>
+                            </li>
+                            <li class="flex items-center text-slate-300">
+                                <i class="fas fa-check text-brand-blue mr-3"></i>
+                                500 Minutes of Talk Time
+                            </li>
+                            <li class="flex items-center text-slate-300">
+                                <i class="fas fa-check text-brand-blue mr-3"></i>
+                                24/7 Call Answering
+                            </li>
+                            <li class="flex items-center text-slate-300">
+                                <i class="fas fa-check text-brand-blue mr-3"></i>
+                                Emergency SMS Alerts to You
+                            </li>
+                            <li class="flex items-center text-slate-300">
+                                <i class="fas fa-check text-brand-blue mr-3"></i>
+                                Weekly Lead Reports
+                            </li>
+                        </ul>
+
+                        <button class="w-full bg-brand-blue hover:bg-blue-600 text-white font-bold py-4 rounded-lg transition-all shadow-lg hover:shadow-blue-500/25 mb-4">
+                            Start Free Trial
+                        </button>
+                        <p class="text-center text-xs text-slate-500">
+                            Guarantee: "Pays for itself with 1 saved job or your money back."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-24 bg-slate-950 border-t border-slate-900">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 data-aos="fade-up" class="text-brand-blue font-bold tracking-wide uppercase text-sm mb-2">FAQ</h2>
+                <h3 data-aos="fade-up" class="text-3xl md:text-5xl font-bold text-white">Common Questions</h3>
+            </div>
+            
+            <div class="space-y-4" id="faq-container">
+                <!-- FAQ items injected via JS for cleaner HTML, or written here -->
+                <div data-aos="fade-up" class="border border-slate-800 rounded-lg bg-slate-900/50 overflow-hidden faq-item">
+                    <button class="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none group">
+                        <span class="font-semibold text-white text-lg group-hover:text-brand-orange transition-colors">How does the AI handle accents or bad connections?</span>
+                        <span class="transform transition-transform duration-300 text-brand-orange icon-chevron"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 transition-all duration-300 ease-in-out overflow-hidden">
+                        <div class="px-6 pb-6 text-slate-400">
+                            GrantStudios uses advanced natural language processing trained on diverse voice datasets. It performs remarkably well with various accents. If the connection is too poor to understand, it politely asks the caller to repeat or redirects to voicemail/SMS.
+                        </div>
+                    </div>
+                </div>
+
+                <div data-aos="fade-up" class="border border-slate-800 rounded-lg bg-slate-900/50 overflow-hidden faq-item">
+                    <button class="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none group">
+                        <span class="font-semibold text-white text-lg group-hover:text-brand-orange transition-colors">Does it integrate with ServiceTitan or Housecall Pro?</span>
+                        <span class="transform transition-transform duration-300 text-brand-orange icon-chevron"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 transition-all duration-300 ease-in-out overflow-hidden">
+                        <div class="px-6 pb-6 text-slate-400">
+                            Yes, we integrate with major field service management software including ServiceTitan, Housecall Pro, and Jobber to sync appointments directly to your dispatch board.
+                        </div>
+                    </div>
+                </div>
+
+                <div data-aos="fade-up" class="border border-slate-800 rounded-lg bg-slate-900/50 overflow-hidden faq-item">
+                    <button class="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none group">
+                        <span class="font-semibold text-white text-lg group-hover:text-brand-orange transition-colors">What if the AI makes a mistake?</span>
+                        <span class="transform transition-transform duration-300 text-brand-orange icon-chevron"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 transition-all duration-300 ease-in-out overflow-hidden">
+                        <div class="px-6 pb-6 text-slate-400">
+                            The system records every call and transcripts are sent immediately to you via SMS/Email. If a booking detail is slightly off, you can catch it instantly. However, our error rate is extremely low for structured tasks like booking.
+                        </div>
+                    </div>
+                </div>
+
+                <div data-aos="fade-up" class="border border-slate-800 rounded-lg bg-slate-900/50 overflow-hidden faq-item">
+                    <button class="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none group">
+                        <span class="font-semibold text-white text-lg group-hover:text-brand-orange transition-colors">Is there a contract?</span>
+                        <span class="transform transition-transform duration-300 text-brand-orange icon-chevron"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div class="faq-content max-h-0 opacity-0 transition-all duration-300 ease-in-out overflow-hidden">
+                        <div class="px-6 pb-6 text-slate-400">
+                            No, our services are month-to-month. We believe the value we provide will keep you around, not a piece of paper. You can cancel anytime.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div class="col-span-1">
+                    <div class="text-2xl font-bold text-white tracking-wider flex items-center gap-2 mb-4">
+                        <span class="text-brand-orange"><i class="fa-solid fa-microchip"></i></span>
+                        GrantStudios
+                    </div>
+                    <p class="text-slate-400 mb-6">AI Solutions for Tradesmen.</p>
+                    <div class="flex space-x-4">
+                        <a href="https://x.com/realcarlgrant" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-black transition-all duration-300">
+                          <i class="fab fa-x-twitter text-lg"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/carl-grant-acquah/" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-[#0077b5] transition-all duration-300">
+                          <i class="fab fa-linkedin-in text-lg"></i>
+                        </a>
+                    </div>
+                </div>
+    
+                <div class="col-span-1">
+                    <h4 class="text-white font-bold uppercase tracking-wider mb-4">Contact</h4>
+                    <ul class="space-y-3 text-slate-400">
+                        <li class="flex items-center"><i class="fas fa-envelope mr-3 text-brand-orange"></i> carlgrantacquah@gmail.com</li>
+                        <li class="flex items-center"><i class="fas fa-phone mr-3 text-brand-orange"></i> +233 559 328 385</li>
+                        <li class="flex items-center"><i class="fas fa-map-marker-alt mr-3 text-brand-orange"></i> Tema, Greater Accra</li>
+                    </ul>
+                </div>
+    
+                <div class="col-span-1">
+                    <h4 class="text-white font-bold uppercase tracking-wider mb-4">Legal</h4>
+                    <ul class="space-y-3 text-slate-400">
+                        <li><a href="#" id="open-privacy" class="hover:text-brand-orange transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" id="open-terms" class="hover:text-brand-orange transition-colors">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-12 pt-8 border-t border-slate-900 text-center text-slate-500 text-sm">
+                &copy; 2025 GrantStudios. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Privacy Modal -->
+    <div id="privacy-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 sm:p-6">
+        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity modal-backdrop"></div>
+        <div class="relative w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col max-h-[85vh] z-10 animate-[fade-in-up_0.3s_ease-out]">
+            <div class="flex items-center justify-between p-6 border-b border-slate-700">
+                <h3 class="text-xl font-bold text-white tracking-tight">Privacy Policy</h3>
+                <button class="close-modal w-8 h-8 flex items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-all">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto text-slate-300 space-y-4 leading-relaxed text-sm md:text-base">
+                <h4 class="text-white font-bold mb-2">1. Introduction</h4>
+                <p>Welcome to GrantStudios. We respect your privacy and are committed to protecting your personal data.</p>
+                <h4 class="text-white font-bold mb-2 mt-4">2. Data We Collect</h4>
+                <p>We may collect Identity Data, Contact Data, Technical Data, and Usage Data (including call recordings).</p>
+                <h4 class="text-white font-bold mb-2 mt-4">3. How We Use Your Data</h4>
+                <p>To perform contracts, for legitimate interests, and to facilitate AI dispatching services.</p>
+                <h4 class="text-white font-bold mb-2 mt-4">4. Contact Details</h4>
+                <p>Contact us at: carlgrantacquah@gmail.com.</p>
+            </div>
+            <div class="p-4 border-t border-slate-700 bg-slate-900/50 rounded-b-2xl flex justify-end">
+                 <button class="close-modal px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition-colors text-sm font-medium">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms Modal -->
+    <div id="terms-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 sm:p-6">
+        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity modal-backdrop"></div>
+        <div class="relative w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col max-h-[85vh] z-10 animate-[fade-in-up_0.3s_ease-out]">
+            <div class="flex items-center justify-between p-6 border-b border-slate-700">
+                <h3 class="text-xl font-bold text-white tracking-tight">Terms of Service</h3>
+                <button class="close-modal w-8 h-8 flex items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-all">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto text-slate-300 space-y-4 leading-relaxed text-sm md:text-base">
+                <h4 class="text-white font-bold mb-2">1. Agreement to Terms</h4>
+                <p>By accessing our services, you agree to these Terms.</p>
+                <h4 class="text-white font-bold mb-2 mt-4">2. Service Description</h4>
+                <p>GrantStudios provides AI-powered call answering and dispatching.</p>
+                <h4 class="text-white font-bold mb-2 mt-4">4. AI Limitations</h4>
+                <p>AI may make errors. GrantStudios is not liable for lost revenue resulting from AI errors.</p>
+                <h4 class="text-white font-bold mb-2 mt-4">7. Governing Law</h4>
+                <p>Laws of Ghana and United States apply.</p>
+            </div>
+            <div class="p-4 border-t border-slate-700 bg-slate-900/50 rounded-b-2xl flex justify-end">
+                 <button class="close-modal px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition-colors text-sm font-medium">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Custom Logic -->
+    <script src="script.js"></script>
+</body>
+</html>
