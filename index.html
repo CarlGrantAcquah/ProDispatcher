@@ -108,9 +108,9 @@
                         <a href="#demo" class="text-gray-300 hover:text-brand-orange transition-colors px-3 py-2 rounded-md text-sm font-medium">The Demo</a>
                         <a href="#pricing" class="text-gray-300 hover:text-brand-orange transition-colors px-3 py-2 rounded-md text-sm font-medium">Pricing</a>
                         <a href="#faq" class="text-gray-300 hover:text-brand-orange transition-colors px-3 py-2 rounded-md text-sm font-medium">FAQ</a>
-                        <a href="tel:+1 (360) 594 5622" class="bg-brand-blue hover:bg-blue-600 text-white px-5 py-2.5 rounded-full text-sm font-semibold transition-all shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transform hover:-translate-y-0.5">
-                            Book A Strategy Call
-                        </a>
+                        <button class="open-contact-modal bg-brand-blue hover:bg-blue-600 text-white px-5 py-2.5 rounded-full text-sm font-semibold transition-all shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transform hover:-translate-y-0.5">
+                            Book Strategy Call
+                        </button>
                     </div>
                 </div>
                 <!-- Mobile menu button -->
@@ -128,7 +128,7 @@
                 <a href="#demo" class="text-gray-300 hover:text-brand-orange block px-3 py-2 rounded-md text-base font-medium">The Demo</a>
                 <a href="#pricing" class="text-gray-300 hover:text-brand-orange block px-3 py-2 rounded-md text-base font-medium">Pricing</a>
                 <a href="#faq" class="text-gray-300 hover:text-brand-orange block px-3 py-2 rounded-md text-base font-medium">FAQ</a>
-                <a href="tel:+1 (360) 594 5622" class="text-white bg-brand-blue block px-3 py-2 rounded-md text-base font-medium mt-4 text-center">Book a Strategy Call</a>
+                <button class="open-contact-modal w-full text-white bg-brand-blue block px-3 py-2 rounded-md text-base font-medium mt-4 text-center">Book Strategy Call</button>
             </div>
         </div>
     </nav>
@@ -216,28 +216,27 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <div data-aos="fade-right">
                     <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">
-                        Listen to "Alex" Handle an Emergency Call.
+                        Listen to "Mike's Plumbing AI" Handle an Emergency.
                     </h2>
                     <p class="text-xl text-slate-400 mb-8">
-                        The customer says "Furnace Broken." Listen to how Alex secures the $300 diagnostic fee before you even wake up.
+                        The customer, Michael, calls about a burst pipe at 455 Main St. Listen to how the AI collects the details, validates the service address, and dispatches a plumber instantly.
                     </p>
                     <ul class="space-y-4 mb-8">
                         <li class="flex items-center text-slate-300">
                             <i class="fas fa-check-circle text-brand-blue mr-3"></i>
-                            Immediate Response
+                            Validates Address & Contact Info
                         </li>
                         <li class="flex items-center text-slate-300">
                             <i class="fas fa-check-circle text-brand-blue mr-3"></i>
-                            Polite & Professional
+                            Calms the Distressed Customer
                         </li>
                         <li class="flex items-center text-slate-300">
                             <i class="fas fa-check-circle text-brand-blue mr-3"></i>
-                            Books The Appointment
+                            Secures the Emergency Job
                         </li>
                     </ul>
                 </div>
                 <div data-aos="fade-left">
-                    <!-- Audio Player Logic is in script.js -->
                     <div id="audio-player-container" class="w-full max-w-lg mx-auto bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl p-6 relative overflow-hidden group transition-all duration-500">
                         <!-- Glow effect -->
                         <div id="player-glow" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] blur-[100px] rounded-full transition-all duration-1000 bg-brand-blue/10 opacity-50 group-hover:bg-brand-orange/10"></div>
@@ -245,9 +244,9 @@
                         <div class="relative z-10">
                             <div class="flex items-center justify-between mb-8">
                                 <div>
-                                    <h3 class="text-white font-bold text-lg">Incoming Call: 2:00 AM</h3>
+                                    <h3 class="text-white font-bold text-lg">Incoming Call: Michael Scott</h3>
                                     <p class="text-slate-400 text-xs uppercase tracking-wider mt-1 flex items-center gap-2">
-                                       <i class="fas fa-phone-alt text-[10px]"></i> "Furnace Broken"
+                                       <i class="fas fa-exclamation-triangle text-[10px] text-red-500"></i> "Burst Pipe - Pleasant Grove"
                                     </p>
                                 </div>
                                 <div id="live-indicator" class="flex space-x-2 items-center px-3 py-1 rounded-full bg-slate-700/50">
@@ -256,7 +255,7 @@
                                 </div>
                             </div>
 
-                            <!-- Visual Waveform (Bars generated by JS or static HTML) -->
+                            <!-- Visual Waveform (Bars generated by JS) -->
                             <div id="waveform" class="flex items-end justify-center space-x-[2px] h-16 mb-8 px-2 overflow-hidden">
                                 <!-- Bars will be injected here via JS -->
                             </div>
@@ -274,11 +273,13 @@
                                     </div>
                                     <div class="flex justify-between mt-2 text-xs text-slate-400 font-mono">
                                         <span id="current-time">00:00</span>
-                                        <span>00:45</span>
+                                        <span>01:52</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <!-- Audio Source -->
+                        <audio id="main-audio" src="./demo_call.mp3"></audio>
                     </div>
                 </div>
             </div>
@@ -312,13 +313,13 @@
                     <p class="text-slate-400">Connects directly to your calendar to book diagnostic slots without double booking you.</p>
                 </div>
 
-                <!-- Feature 3 -->
+                <!-- Feature 3 (Updated: No SMS) -->
                 <div data-aos="fade-up" data-aos-delay="200" class="glass-card p-8 rounded-2xl hover:border-green-500/50 transition-colors group">
                     <div class="w-14 h-14 bg-slate-800 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                        <i class="fas fa-mobile-alt text-2xl text-green-500"></i>
+                        <i class="fas fa-file-alt text-2xl text-green-500"></i>
                     </div>
-                    <h4 class="text-xl font-bold text-white mb-4">Text Message Follow-up</h4>
-                    <p class="text-slate-400">Instantly texts the customer a confirmation and prepares them for your arrival.</p>
+                    <h4 class="text-xl font-bold text-white mb-4">Professional Call Hand-off</h4>
+                    <p class="text-slate-400">The AI politely informs the customer their job is booked and notifies you immediately with the job details, ensuring a seamless hand-off.</p>
                 </div>
             </div>
         </div>
@@ -353,9 +354,10 @@
                                 <i class="fas fa-check text-brand-blue mr-3"></i>
                                 24/7 Call Answering
                             </li>
+                            <!-- Updated: No SMS -->
                             <li class="flex items-center text-slate-300">
                                 <i class="fas fa-check text-brand-blue mr-3"></i>
-                                Emergency SMS Alerts to You
+                                Instant Priority Notifications
                             </li>
                             <li class="flex items-center text-slate-300">
                                 <i class="fas fa-check text-brand-blue mr-3"></i>
@@ -363,7 +365,7 @@
                             </li>
                         </ul>
 
-                        <button class="w-full bg-brand-blue hover:bg-blue-600 text-white font-bold py-4 rounded-lg transition-all shadow-lg hover:shadow-blue-500/25 mb-4">
+                        <button class="open-contact-modal w-full bg-brand-blue hover:bg-blue-600 text-white font-bold py-4 rounded-lg transition-all shadow-lg hover:shadow-blue-500/25 mb-4">
                             Start Free Trial
                         </button>
                         <p class="text-center text-xs text-slate-500">
@@ -384,7 +386,6 @@
             </div>
             
             <div class="space-y-4" id="faq-container">
-                <!-- FAQ items injected via JS for cleaner HTML, or written here -->
                 <div data-aos="fade-up" class="border border-slate-800 rounded-lg bg-slate-900/50 overflow-hidden faq-item">
                     <button class="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none group">
                         <span class="font-semibold text-white text-lg group-hover:text-brand-orange transition-colors">How does the AI handle accents or bad connections?</span>
@@ -409,6 +410,7 @@
                     </div>
                 </div>
 
+                <!-- Updated Answer: No SMS -->
                 <div data-aos="fade-up" class="border border-slate-800 rounded-lg bg-slate-900/50 overflow-hidden faq-item">
                     <button class="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none group">
                         <span class="font-semibold text-white text-lg group-hover:text-brand-orange transition-colors">What if the AI makes a mistake?</span>
@@ -416,7 +418,7 @@
                     </button>
                     <div class="faq-content max-h-0 opacity-0 transition-all duration-300 ease-in-out overflow-hidden">
                         <div class="px-6 pb-6 text-slate-400">
-                            The system records every call and transcripts are sent immediately to you via SMS/Email. If a booking detail is slightly off, you can catch it instantly. However, our error rate is extremely low for structured tasks like booking.
+                            The AI is programmed to be conservative. If it doesn't know an answer, it takes a detailed message and instantly notifies you with a transcript so you can follow up personally. It never guesses.
                         </div>
                     </div>
                 </div>
@@ -478,6 +480,46 @@
             </div>
         </div>
     </footer>
+
+    <!-- Contact Strategy Modal (New) -->
+    <div id="contact-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 sm:p-6">
+        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity modal-backdrop"></div>
+        <div class="relative w-full max-w-lg bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col z-10 animate-[fade-in-up_0.3s_ease-out]">
+            <div class="flex items-center justify-between p-6 border-b border-slate-700">
+                <h3 class="text-xl font-bold text-white tracking-tight">Book A Strategy Call</h3>
+                <button class="close-contact-modal w-8 h-8 flex items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-all">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <p class="text-slate-400 text-sm mb-6">
+                    Since you're interested, why don't we set up a quick 15-minute strategy call to see if this fits your business? We can look at your current call volume and see exactly how much revenue we can recover for you.
+                </p>
+                <form id="strategy-form" class="space-y-4">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
+                        <input type="text" id="name" name="name" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-all">
+                    </div>
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-slate-300 mb-1">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-all">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
+                        <input type="email" id="email" name="email" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-all">
+                    </div>
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-slate-300 mb-1">Anything specific you want to discuss?</label>
+                        <textarea id="message" name="message" rows="3" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-all"></textarea>
+                    </div>
+                    <button type="submit" id="submit-btn" class="w-full bg-brand-orange hover:bg-orange-600 text-white font-bold py-3 rounded-lg transition-all shadow-lg hover:shadow-orange-500/25 mt-2 flex items-center justify-center">
+                        <span id="btn-text">Submit Request</span>
+                        <i id="btn-spinner" class="fas fa-spinner fa-spin ml-2 hidden"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- Privacy Modal -->
     <div id="privacy-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 sm:p-6">
