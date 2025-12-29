@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GrantStudios - AI Solutions for Tradesmen</title>
     
+    <!-- FAVICON -->
+    <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="%23F97316" d="M344 0H488c13.3 0 24 10.7 24 24V168c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l40-40c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-40 40c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H624c13.3 0 24 10.7 24 24s-10.7 24-24 24H604c-9.7 0-18.5 5.8-22.2 14.8s-1.7 19.3 5.2 26.2l40 40c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-40-40c-6.9-6.9-17.2-8.9-26.2-5.2s-14.8 12.5-14.8 22.2V488c0 13.3-10.7 24-24 24H344c-13.3 0-24-10.7-24-24V344c0-13.3 10.7-24 24-24H488c13.3 0 24 10.7 24 24V488c0 13.3-10.7 24-24 24H344c-13.3 0-24-10.7-24-24V344zM168 0H24c-13.3 0-24 10.7-24 24V168c0 13.3 10.7 24 24 24H168c13.3 0 24-10.7 24-24V24c0-13.3-10.7-24-24-24zM24 344H168c13.3 0 24 10.7 24 24V488c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V368c0-13.3 10.7-24 24-24zM256 128a128 128 0 1 1 0 256 128 128 0 1 1 0-256z"/></svg>'>
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- AOS Animation CSS -->
@@ -313,7 +316,7 @@
                     <p class="text-slate-400">Connects directly to your calendar to book diagnostic slots without double booking you.</p>
                 </div>
 
-                <!-- Feature 3 (Updated: No SMS) -->
+                <!-- Feature 3 -->
                 <div data-aos="fade-up" data-aos-delay="200" class="glass-card p-8 rounded-2xl hover:border-green-500/50 transition-colors group">
                     <div class="w-14 h-14 bg-slate-800 rounded-lg flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                         <i class="fas fa-file-alt text-2xl text-green-500"></i>
@@ -354,7 +357,6 @@
                                 <i class="fas fa-check text-brand-blue mr-3"></i>
                                 24/7 Call Answering
                             </li>
-                            <!-- Updated: No SMS -->
                             <li class="flex items-center text-slate-300">
                                 <i class="fas fa-check text-brand-blue mr-3"></i>
                                 Instant Priority Notifications
@@ -410,7 +412,6 @@
                     </div>
                 </div>
 
-                <!-- Updated Answer: No SMS -->
                 <div data-aos="fade-up" class="border border-slate-800 rounded-lg bg-slate-900/50 overflow-hidden faq-item">
                     <button class="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none group">
                         <span class="font-semibold text-white text-lg group-hover:text-brand-orange transition-colors">What if the AI makes a mistake?</span>
@@ -481,7 +482,7 @@
         </div>
     </footer>
 
-    <!-- Contact Strategy Modal (New) -->
+    <!-- Contact Strategy Modal (Final Fix: Iframe Method) -->
     <div id="contact-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 sm:p-6">
         <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity modal-backdrop"></div>
         <div class="relative w-full max-w-lg bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col z-10 animate-[fade-in-up_0.3s_ease-out]">
@@ -492,31 +493,58 @@
                 </button>
             </div>
             <div class="p-6">
-                <p class="text-slate-400 text-sm mb-6">
-                    Since you're interested, why don't we set up a quick 15-minute strategy call to see if this fits your business? We can look at your current call volume and see exactly how much revenue we can recover for you.
-                </p>
-                <form id="strategy-form" class="space-y-4">
-                    <div>
-                        <label for="name" class="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
-                        <input type="text" id="name" name="name" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-all">
+                <!-- Hidden Iframe for submission -->
+                <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+                
+                <!-- Contact Form -->
+                <div id="contact-form-container">
+                    <p class="text-slate-400 text-sm mb-6">
+                        Since you're interested, why don't we set up a quick 15-minute strategy call to see if this fits your business? We can look at your current call volume and see exactly how much revenue we can recover for you.
+                    </p>
+                    
+                    <!-- Form targets the hidden iframe -->
+                    <!-- IMPORTANT: Ensure your n8n webhook is set to POST method -->
+                    <form id="strategy-form" action="https://n8n-w0tv.onrender.com/webhook/02dc3199-3365-4844-a1be-8b1d36f7dca7" method="POST" target="hidden_iframe" class="space-y-4">
+                        
+                        <!-- Hidden Auth Field (Body) -->
+                        <input type="hidden" name="book_strategy_call" value="V5G7sYXK6sXYUkC">
+                        
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
+                            <input type="text" id="name" name="name" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-all">
+                        </div>
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-slate-300 mb-1">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-all">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
+                            <input type="email" id="email" name="email" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-all">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-slate-300 mb-1">Anything specific you want to discuss?</label>
+                            <textarea id="message" name="message" rows="3" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-all"></textarea>
+                        </div>
+                        <button type="submit" id="submit-btn" class="w-full bg-brand-orange hover:bg-orange-600 text-white font-bold py-3 rounded-lg transition-all shadow-lg hover:shadow-orange-500/25 mt-2 flex items-center justify-center">
+                            <span id="btn-text">Submit Request</span>
+                            <i id="btn-spinner" class="fas fa-spinner fa-spin ml-2 hidden"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Success Message (Hidden by default) -->
+                <div id="success-message" class="hidden flex flex-col items-center justify-center py-8 text-center">
+                    <div class="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-check text-3xl text-green-500"></i>
                     </div>
-                    <div>
-                        <label for="phone" class="block text-sm font-medium text-slate-300 mb-1">Phone Number</label>
-                        <input type="tel" id="phone" name="phone" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-all">
-                    </div>
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
-                        <input type="email" id="email" name="email" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-all">
-                    </div>
-                    <div>
-                        <label for="message" class="block text-sm font-medium text-slate-300 mb-1">Anything specific you want to discuss?</label>
-                        <textarea id="message" name="message" rows="3" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue transition-all"></textarea>
-                    </div>
-                    <button type="submit" id="submit-btn" class="w-full bg-brand-orange hover:bg-orange-600 text-white font-bold py-3 rounded-lg transition-all shadow-lg hover:shadow-orange-500/25 mt-2 flex items-center justify-center">
-                        <span id="btn-text">Submit Request</span>
-                        <i id="btn-spinner" class="fas fa-spinner fa-spin ml-2 hidden"></i>
+                    <h4 class="text-2xl font-bold text-white mb-2">Request Received!</h4>
+                    <p class="text-slate-400 mb-6 max-w-xs">
+                        An agent will be in touch shortly to schedule your call. Please check your email inbox (and in rare cases your spam folder) for more details.
+                    </p>
+                    <button class="close-contact-modal w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 rounded-lg transition-colors">
+                        Close
                     </button>
-                </form>
+                </div>
             </div>
         </div>
     </div>
