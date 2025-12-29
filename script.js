@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 4. Audio Player Simulation
+    // 4. Audio Player Simulation (Actual Audio)
     const playBtn = document.getElementById('play-btn');
     const playIcon = document.getElementById('play-icon');
     const playRing = document.getElementById('play-ring');
@@ -56,11 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const liveIndicator = document.getElementById('live-indicator');
     const playerGlow = document.getElementById('player-glow');
     const container = document.getElementById('audio-player-container');
+    const audio = document.getElementById('main-audio');
 
     let isPlaying = false;
-    let timerInterval;
-    let currentTime = 0;
-    const duration = 45; // seconds
+    let waveformInterval;
 
     // Generate static waveform bars
     for(let i=0; i<30; i++) {
@@ -70,30 +69,58 @@ document.addEventListener('DOMContentLoaded', () => {
         bar.dataset.initialHeight = bar.style.height;
         waveform.appendChild(bar);
     }
-
     const bars = waveform.children;
 
     playBtn.addEventListener('click', () => {
-        isPlaying = !isPlaying;
-        updatePlayerState();
+        if (isPlaying) {
+            audio.pause();
+        } else {
+            audio.play();
+        }
     });
 
-    function updatePlayerState() {
-        if (isPlaying) {
-            // UI Changes
+    audio.addEventListener('play', () => {
+        isPlaying = true;
+        updatePlayerState(true);
+        waveformInterval = setInterval(animateWaveform, 100);
+    });
+
+    audio.addEventListener('pause', () => {
+        isPlaying = false;
+        updatePlayerState(false);
+        clearInterval(waveformInterval);
+        resetWaveform();
+    });
+
+    audio.addEventListener('ended', () => {
+        isPlaying = false;
+        updatePlayerState(false);
+        clearInterval(waveformInterval);
+        resetWaveform();
+        audio.currentTime = 0;
+    });
+
+    audio.addEventListener('timeupdate', () => {
+        const percent = (audio.currentTime / audio.duration) * 100;
+        progressBar.style.width = `${percent}%`;
+        
+        const minutes = Math.floor(audio.currentTime / 60);
+        const seconds = Math.floor(audio.currentTime % 60);
+        currentTimeEl.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    });
+
+    function updatePlayerState(playing) {
+        if (playing) {
             playIcon.classList.remove('fa-play');
             playIcon.classList.add('fa-pause');
-            playRing.classList.add('hidden'); // Hide ping animation
+            playRing.classList.add('hidden');
             
-            // Container Glow
             container.classList.add('border-brand-orange/50', 'shadow-[0_0_50px_-10px_rgba(249,115,22,0.4)]');
             container.classList.remove('border-white/10', 'shadow-2xl');
             
-            // Background Glow
             playerGlow.classList.remove('bg-brand-blue/10', 'opacity-50');
             playerGlow.classList.add('bg-brand-orange/20', 'opacity-100');
 
-            // Live Indicator
             liveIndicator.classList.remove('bg-slate-700/50');
             liveIndicator.classList.add('bg-red-500/10');
             liveIndicator.querySelector('.indicator-dot').classList.remove('bg-slate-500');
@@ -101,34 +128,17 @@ document.addEventListener('DOMContentLoaded', () => {
             liveIndicator.querySelector('.indicator-text').innerText = 'Live';
             liveIndicator.querySelector('.indicator-text').classList.remove('text-slate-500');
             liveIndicator.querySelector('.indicator-text').classList.add('text-red-500');
-
-            // Start Timer
-            timerInterval = setInterval(() => {
-                currentTime += 0.1; // speed up slightly for demo feel
-                if (currentTime >= duration) {
-                    currentTime = 0;
-                    isPlaying = false;
-                    updatePlayerState();
-                }
-                updateProgress();
-                animateWaveform();
-            }, 100);
-
         } else {
-            // Stop UI
             playIcon.classList.remove('fa-pause');
             playIcon.classList.add('fa-play');
             playRing.classList.remove('hidden');
 
-            // Reset Container
             container.classList.remove('border-brand-orange/50', 'shadow-[0_0_50px_-10px_rgba(249,115,22,0.4)]');
             container.classList.add('border-white/10', 'shadow-2xl');
 
-            // Reset Glow
             playerGlow.classList.add('bg-brand-blue/10', 'opacity-50');
             playerGlow.classList.remove('bg-brand-orange/20', 'opacity-100');
 
-            // Reset Indicator
             liveIndicator.classList.add('bg-slate-700/50');
             liveIndicator.classList.remove('bg-red-500/10');
             liveIndicator.querySelector('.indicator-dot').classList.add('bg-slate-500');
@@ -136,25 +146,13 @@ document.addEventListener('DOMContentLoaded', () => {
             liveIndicator.querySelector('.indicator-text').innerText = 'Ready';
             liveIndicator.querySelector('.indicator-text').classList.add('text-slate-500');
             liveIndicator.querySelector('.indicator-text').classList.remove('text-red-500');
-
-            clearInterval(timerInterval);
-            resetWaveform();
         }
-    }
-
-    function updateProgress() {
-        const percent = (currentTime / duration) * 100;
-        progressBar.style.width = `${percent}%`;
-        
-        const seconds = Math.floor(currentTime);
-        currentTimeEl.innerText = `00:${seconds.toString().padStart(2, '0')}`;
     }
 
     function animateWaveform() {
         for(let bar of bars) {
             bar.classList.remove('bg-slate-600');
             bar.classList.add('bg-brand-orange');
-            // Randomize height for "talking" effect
             bar.style.height = `${Math.random() * 100}%`;
         }
     }
@@ -169,7 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 5. FAQ Accordion
     const faqItems = document.querySelectorAll('.faq-item');
-    
     faqItems.forEach(item => {
         const button = item.querySelector('button');
         const content = item.querySelector('.faq-content');
@@ -177,8 +174,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         button.addEventListener('click', () => {
             const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
-            
-            // Close all others
             faqItems.forEach(otherItem => {
                 otherItem.querySelector('.faq-content').style.maxHeight = '0px';
                 otherItem.querySelector('.faq-content').classList.remove('opacity-100');
@@ -193,18 +188,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 6. Modals (Privacy & Terms)
+    // 6. Modals (Privacy, Terms, and Contact)
     const privacyModal = document.getElementById('privacy-modal');
     const termsModal = document.getElementById('terms-modal');
+    const contactModal = document.getElementById('contact-modal');
+    
     const openPrivacy = document.getElementById('open-privacy');
     const openTerms = document.getElementById('open-terms');
-    const closeButtons = document.querySelectorAll('.close-modal, .modal-backdrop');
+    const openContactBtns = document.querySelectorAll('.open-contact-modal');
+    
+    const closeButtons = document.querySelectorAll('.close-modal, .close-contact-modal, .modal-backdrop');
 
     function toggleModal(modal, show) {
         if(show) {
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            document.body.style.overflow = 'hidden'; // prevent background scrolling
+            document.body.style.overflow = 'hidden'; 
         } else {
             modal.classList.add('hidden');
             modal.classList.remove('flex');
@@ -212,20 +211,80 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    openPrivacy.addEventListener('click', (e) => {
-        e.preventDefault();
-        toggleModal(privacyModal, true);
-    });
-
-    openTerms.addEventListener('click', (e) => {
-        e.preventDefault();
-        toggleModal(termsModal, true);
+    openPrivacy.addEventListener('click', (e) => { e.preventDefault(); toggleModal(privacyModal, true); });
+    openTerms.addEventListener('click', (e) => { e.preventDefault(); toggleModal(termsModal, true); });
+    
+    openContactBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleModal(contactModal, true);
+        });
     });
 
     closeButtons.forEach(btn => {
         btn.addEventListener('click', () => {
             toggleModal(privacyModal, false);
             toggleModal(termsModal, false);
+            toggleModal(contactModal, false);
         });
+    });
+
+    // 7. Contact Form Submission (Webhook Integration)
+    const form = document.getElementById('strategy-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const btnText = document.getElementById('btn-text');
+    const btnSpinner = document.getElementById('btn-spinner');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        btnText.innerText = "Sending...";
+        submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+        btnSpinner.classList.remove('hidden');
+
+        // Gather data
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+            const response = await fetch('https://n8n-w0tv.onrender.com/webhook/6b26e309-5e56-4e98-96ad-27f9f7c1508c', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                // Success UI
+                btnText.innerText = "Request Sent!";
+                btnSpinner.classList.add('hidden');
+                submitBtn.classList.remove('bg-brand-orange', 'hover:bg-orange-600');
+                submitBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+                
+                // Clear form and close modal after delay
+                setTimeout(() => {
+                    form.reset();
+                    toggleModal(contactModal, false);
+                    // Reset button style
+                    setTimeout(() => {
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('opacity-75', 'cursor-not-allowed', 'bg-green-600', 'hover:bg-green-700');
+                        submitBtn.classList.add('bg-brand-orange', 'hover:bg-orange-600');
+                        btnText.innerText = "Submit Request";
+                    }, 500);
+                }, 2000);
+            } else {
+                throw new Error('Network response was not ok');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            btnText.innerText = "Error. Try Again.";
+            btnSpinner.classList.add('hidden');
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+        }
     });
 });
