@@ -12,23 +12,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Navbar Scroll Effect
     const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 20) {
-            navbar.classList.add('bg-slate-900/90', 'backdrop-blur-md', 'shadow-lg', 'border-b', 'border-white/5');
-            navbar.classList.remove('py-2', 'bg-transparent');
-            navbar.classList.add('py-0');
-        } else {
-            navbar.classList.remove('bg-slate-900/90', 'backdrop-blur-md', 'shadow-lg', 'border-b', 'border-white/5', 'py-0');
-            navbar.classList.add('py-2', 'bg-transparent');
-        }
-    });
+    if (navbar) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                navbar.classList.add('bg-slate-900/90', 'backdrop-blur-md', 'shadow-lg', 'border-b', 'border-white/5');
+                navbar.classList.remove('py-2', 'bg-transparent');
+                navbar.classList.add('py-0');
+            } else {
+                navbar.classList.remove('bg-slate-900/90', 'backdrop-blur-md', 'shadow-lg', 'border-b', 'border-white/5', 'py-0');
+                navbar.classList.add('py-2', 'bg-transparent');
+            }
+        });
+    }
 
     // 3. Mobile Menu Toggle
     const menuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
     const menuIcon = document.getElementById('menu-icon');
 
-    if (menuBtn) {
+    if (menuBtn && mobileMenu && menuIcon) {
         menuBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
             if (mobileMenu.classList.contains('hidden')) {
@@ -39,18 +41,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 menuIcon.classList.add('fa-times');
             }
         });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                menuIcon.classList.remove('fa-times');
+                menuIcon.classList.add('fa-bars');
+            });
+        });
     }
 
-    // Close mobile menu when clicking a link
-    document.querySelectorAll('#mobile-menu a').forEach(link => {
-        link.addEventListener('click', () => {
-            mobileMenu.classList.add('hidden');
-            menuIcon.classList.remove('fa-times');
-            menuIcon.classList.add('fa-bars');
-        });
-    });
-
-    // 4. Audio Player Simulation (Actual Audio)
+    // 4. Audio Player Simulation
     const playBtn = document.getElementById('play-btn');
     const playIcon = document.getElementById('play-icon');
     const playRing = document.getElementById('play-ring');
@@ -62,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('audio-player-container');
     const audio = document.getElementById('main-audio');
 
-    if (playBtn && audio) {
+    if (playBtn && audio && waveform) {
         let isPlaying = false;
         let waveformInterval;
 
@@ -204,10 +206,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const openPrivacy = document.getElementById('open-privacy');
     const openTerms = document.getElementById('open-terms');
     const openContactBtns = document.querySelectorAll('.open-contact-modal');
-    
     const closeButtons = document.querySelectorAll('.close-modal, .close-contact-modal, .modal-backdrop');
 
+    // Helper to reset contact form state
+    function resetContactModal() {
+        const formContainer = document.getElementById('contact-form-container');
+        const successMessage = document.getElementById('success-message');
+        const form = document.getElementById('strategy-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const btnText = document.getElementById('btn-text');
+
+        if(formContainer && successMessage && form) {
+            formContainer.classList.remove('hidden');
+            successMessage.classList.add('hidden');
+            successMessage.classList.remove('flex');
+            form.reset();
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-75', 'cursor-not-allowed', 'bg-green-600', 'hover:bg-green-700');
+            submitBtn.classList.add('bg-brand-orange', 'hover:bg-orange-600');
+            btnText.innerText = "Submit Request";
+        }
+    }
+
+    // FIXED: Toggle Modal with Safety Check
     function toggleModal(modal, show) {
+        if (!modal) return; // Stop if modal doesn't exist to prevent crash
+
         if(show) {
             modal.classList.remove('hidden');
             modal.classList.add('flex');
@@ -216,86 +240,72 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.classList.add('hidden');
             modal.classList.remove('flex');
             document.body.style.overflow = '';
+            
+            // Reset contact form if it's the contact modal being closed
+            if (modal.id === 'contact-modal') {
+                setTimeout(resetContactModal, 300); 
+            }
         }
     }
 
     if(openPrivacy) openPrivacy.addEventListener('click', (e) => { e.preventDefault(); toggleModal(privacyModal, true); });
     if(openTerms) openTerms.addEventListener('click', (e) => { e.preventDefault(); toggleModal(termsModal, true); });
     
-    openContactBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            toggleModal(contactModal, true);
+    if(openContactBtns) {
+        openContactBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                toggleModal(contactModal, true);
+            });
         });
-    });
+    }
 
-    closeButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            toggleModal(privacyModal, false);
-            toggleModal(termsModal, false);
-            toggleModal(contactModal, false);
+    if(closeButtons) {
+        closeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                toggleModal(privacyModal, false);
+                toggleModal(termsModal, false);
+                toggleModal(contactModal, false);
+            });
         });
-    });
+    }
 
-    // 7. Contact Form Submission (Fixed for CORS)
+    // 7. Contact Form Submission (Hidden Iframe Method)
     const form = document.getElementById('strategy-form');
     const submitBtn = document.getElementById('submit-btn');
     const btnText = document.getElementById('btn-text');
     const btnSpinner = document.getElementById('btn-spinner');
+    const formContainer = document.getElementById('contact-form-container');
+    const successMessage = document.getElementById('success-message');
+    const hiddenIframe = document.getElementById('hidden_iframe');
 
-    if(form) {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
+    if(form && hiddenIframe) {
+        form.addEventListener('submit', (e) => {
+            // Do NOT prevent default; let form submit to iframe
             
             // Show loading state
-            submitBtn.disabled = true;
-            btnText.innerText = "Sending...";
-            submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
-            btnSpinner.classList.remove('hidden');
-
-            // Convert FormData to URLSearchParams (Standard Form Encoding)
-            // This format combined with no-cors mode allows the request to pass through
-            const formData = new FormData(form);
-            const urlEncodedData = new URLSearchParams(formData);
-
-            try {
-                // We use mode: 'no-cors'. This allows the browser to send the data 
-                // to n8n without waiting for a permission slip (CORS header).
-                // Note: The response will be "opaque", meaning we can't read the text response,
-                // but if it doesn't throw a network error, it went through.
-                await fetch('https://n8n-w0tv.onrender.com/webhook/6b26e309-5e56-4e98-96ad-27f9f7c1508c', {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: urlEncodedData,
-                });
-
-                // Assume success if no error was thrown
-                btnText.innerText = "Request Sent!";
-                btnSpinner.classList.add('hidden');
-                submitBtn.classList.remove('bg-brand-orange', 'hover:bg-orange-600');
-                submitBtn.classList.add('bg-green-600', 'hover:bg-green-700');
-                
-                setTimeout(() => {
-                    form.reset();
-                    toggleModal(contactModal, false);
-                    setTimeout(() => {
-                        submitBtn.disabled = false;
-                        submitBtn.classList.remove('opacity-75', 'cursor-not-allowed', 'bg-green-600', 'hover:bg-green-700');
-                        submitBtn.classList.add('bg-brand-orange', 'hover:bg-orange-600');
-                        btnText.innerText = "Submit Request";
-                    }, 500);
-                }, 2000);
-
-            } catch (error) {
-                console.error('Error:', error);
-                btnText.innerText = "Error. Try Again.";
-                btnSpinner.classList.add('hidden');
-                submitBtn.disabled = false;
-                submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+            if(submitBtn) {
+                submitBtn.disabled = true;
+                btnText.innerText = "Sending...";
+                submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+                btnSpinner.classList.remove('hidden');
             }
+
+            // Handle response via iframe onload
+            hiddenIframe.onload = function() {
+                if(btnText) btnText.innerText = "Success!";
+                if(btnSpinner) btnSpinner.classList.add('hidden');
+                
+                // Show Thank You Message
+                if(formContainer) formContainer.classList.add('hidden');
+                if(successMessage) {
+                    successMessage.classList.remove('hidden');
+                    successMessage.classList.add('flex');
+                }
+
+                // Remove the handler
+                hiddenIframe.onload = null;
+            };
         });
     }
 });
